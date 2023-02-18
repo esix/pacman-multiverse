@@ -1,5 +1,5 @@
 import StartScene from "./scenes/StartScene";
-import { TestScene } from './scenes/TestScene/TestScene';
+import PacmanScene from "./scenes/PacmanScene";
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
   title: 'Ultra Pacman',
@@ -11,11 +11,5 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
   // resolution: 1,
   type: Phaser.AUTO,
   parent: 'game',
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 200 }
-    }
-  },
-  scene: [StartScene, TestScene]
+  scene: [StartScene, PacmanScene]
 };
