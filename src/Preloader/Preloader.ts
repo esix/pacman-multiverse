@@ -1,7 +1,7 @@
-class StartScene extends Phaser.Scene {
+class Preloader extends Phaser.Scene {
   public constructor() {
     super({
-      key: 'StartScene',
+      key: 'Preloader',
     });
   }
 
@@ -15,7 +15,7 @@ class StartScene extends Phaser.Scene {
     bg.displayWidth = this.sys.canvas.width;
     bg.displayHeight = this.sys.canvas.height;
 
-    const helloButton = this.add.text(
+    const startButton = this.add.text(
       550, 100,
       'Start',
       {
@@ -28,11 +28,11 @@ class StartScene extends Phaser.Scene {
           fill: true,
         }
       });
-    helloButton.setInteractive();
-    helloButton.on('pointerdown', () => {
-      this.scene.start('TestScene');
+    startButton.setInteractive();
+    startButton.on('pointerdown', () => {
+      this.scene.start('Pacman');
     });
   }
 }
 
-export default StartScene;
+export default Preloader;

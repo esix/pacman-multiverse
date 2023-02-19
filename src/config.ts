@@ -1,5 +1,5 @@
-import StartScene from "./scenes/StartScene";
-import PacmanScene from "./scenes/PacmanScene";
+import Preloader from "./Preloader";
+import Pacman from "./Pacman";
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
   title: 'Ultra Pacman',
@@ -7,9 +7,18 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
   version: '1.0',
   width: 800,
   height: 600,
-  backgroundColor: "#EDEEC9",
+  // backgroundColor: "#EDEEC9",
+  backgroundColor: 0x000000,
   // resolution: 1,
   type: Phaser.AUTO,
   parent: 'game',
-  scene: [StartScene, PacmanScene]
+  pixelArt: true,
+  physics: {
+    default: "arcade",
+    arcade: {
+      debug: false
+      // debugShowVelocity: false
+    }
+  },
+  scene: [Preloader, Pacman]
 };
