@@ -43,7 +43,6 @@ module.exports = {
       },
       hash: false
     }),
-
   ],
   optimization: {
     splitChunks: {

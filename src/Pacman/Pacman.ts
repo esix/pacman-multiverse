@@ -12,12 +12,12 @@ export default class Pacman extends Phaser.Scene {
   private map: Phaser.Tilemaps.Tilemap;
   private layer: Phaser.Tilemaps.TilemapLayer;
   private pacman: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  private safetile: any;
-  private gridsize: any;
-  private speed: any;
-  private threshold: any;
-  private marker: any;
-  private turnPoint: any;
+  private safetile: number;
+  private gridsize: number;
+  private speed: number;
+  private threshold: number;
+  private marker: Phaser.Geom.Point;
+  private turnPoint: Phaser.Geom.Point;
   private directions: any;
   private opposites: Direction[];
   private current: Direction;
@@ -26,7 +26,7 @@ export default class Pacman extends Phaser.Scene {
   private cursors: any;
 
   constructor() {
-    super({ key: 'Pacman' });
+    super({key: 'Pacman'});
 
     this.map = null;
     this.layer = null;
@@ -37,8 +37,8 @@ export default class Pacman extends Phaser.Scene {
     this.threshold = 3;
     this.marker = new Phaser.Geom.Point();
     this.turnPoint = new Phaser.Geom.Point();
-    this.directions = [ null, null, null, null, null];
-    this.opposites = [Direction.NONE, Direction.RIGHT, Direction.LEFT, Direction.DOWN, Direction.UP ];
+    this.directions = [null, null, null, null, null];
+    this.opposites = [Direction.NONE, Direction.RIGHT, Direction.LEFT, Direction.DOWN, Direction.UP];
     this.current = Direction.UP;
     this.turning = Direction.NONE;
   }
@@ -59,17 +59,17 @@ export default class Pacman extends Phaser.Scene {
   public create(): void {
     this.anims.create({
       key: 'munch',
-      frames: this.anims.generateFrameNumbers('pacman', { frames: [ 0, 1, 2, 1] }),
+      frames: this.anims.generateFrameNumbers('pacman', {frames: [0, 1, 2, 1]}),
       frameRate: 10,
       repeat: -1
     });
 
-    this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
-    const tileset = this.map.addTilesetImage('pacman-tiles','tiles');
+    this.map = this.make.tilemap({key: 'map', tileWidth: 32, tileHeight: 32});
+    const tileset = this.map.addTilesetImage('pacman-tiles', 'tiles');
     this.layer = this.map.createLayer('Pacman', tileset, 0, 0);
     this.dots = this.add.group();
-    const pillsArray = this.map.createFromTiles(7, this.safetile, {key:'dot'}, this);
-    pillsArray.forEach((dot: any)=>{
+    const pillsArray = this.map.createFromTiles(7, this.safetile, {key: 'dot'}, this);
+    pillsArray.forEach(dot => {
       dot.x += 6;
       dot.y += 6;
       this.physics.add.existing(dot)

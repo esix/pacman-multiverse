@@ -20,5 +20,6 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
       // debugShowVelocity: false
     }
   },
-  scene: [Preloader, Pacman]
+  // scene: [Preloader, Pacman]
+  scene: [Pacman]
 };
