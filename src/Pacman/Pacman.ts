@@ -8,14 +8,15 @@ enum Direction {
   DOWN = 4,
 }
 
+const SAFETILE = 14;
+const GRIDSIZE = 16;
+const SPEED = 150;
+const THRESHOLD = 3;
+
 export default class Pacman extends Phaser.Scene {
   private map: Phaser.Tilemaps.Tilemap;
   private layer: Phaser.Tilemaps.TilemapLayer;
   private pacman: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  private safetile: number;
-  private gridsize: number;
-  private speed: number;
-  private threshold: number;
   private marker: Phaser.Geom.Point;
   private turnPoint: Phaser.Geom.Point;
   private directions: any;
@@ -31,10 +32,6 @@ export default class Pacman extends Phaser.Scene {
     this.map = null;
     this.layer = null;
     this.pacman = null;
-    this.safetile = 14;
-    this.gridsize = 16;
-    this.speed = 150;
-    this.threshold = 3;
     this.marker = new Phaser.Geom.Point();
     this.turnPoint = new Phaser.Geom.Point();
     this.directions = [null, null, null, null, null];
@@ -64,11 +61,16 @@ export default class Pacman extends Phaser.Scene {
       repeat: -1
     });
 
-    this.map = this.make.tilemap({key: 'map', tileWidth: 32, tileHeight: 32});
+    this.map = this.make.tilemap({key: 'map'});
+
     const tileset = this.map.addTilesetImage('pacman-tiles', 'tiles');
+
     this.layer = this.map.createLayer('Pacman', tileset, 0, 0);
+    this.layer.scaleX = 1.6;
+    this.layer.scaleY = 1;
+
     this.dots = this.add.group();
-    const pillsArray = this.map.createFromTiles(7, this.safetile, {key: 'dot'}, this);
+    const pillsArray = this.map.createFromTiles(7, SAFETILE, {key: 'dot'}, this);
     pillsArray.forEach(dot => {
       dot.x += 6;
       dot.y += 6;
@@ -76,10 +78,12 @@ export default class Pacman extends Phaser.Scene {
       this.dots.add(dot);
     });
     //  Pacman should collide with everything except the safe tile
-    this.map.setCollisionByExclusion([this.safetile], true, false, this.layer);
+    this.map.setCollisionByExclusion([SAFETILE], true, false, this.layer);
+
     //  Position Pacman at grid location 14x17 (the +8 accounts for his anchor)
     this.pacman = this.physics.add.sprite((14 * 16) + 8, (17 * 16) + 8, 'pacman', 0);
     this.pacman.body.setSize(16, 16);
+
     this.pacman.play('munch');
     this.physics.add.collider(this.pacman, this.layer);
     this.physics.add.overlap(this.pacman, this.dots, this.eatDot, null, this);
@@ -90,8 +94,8 @@ export default class Pacman extends Phaser.Scene {
   }
 
   public update(time: number, delta: number) {
-    this.marker.x = Phaser.Math.Snap.Floor(Math.floor(this.pacman.x), this.gridsize) / this.gridsize;
-    this.marker.y = Phaser.Math.Snap.Floor(Math.floor(this.pacman.y), this.gridsize) / this.gridsize;
+    this.marker.x = Phaser.Math.Snap.Floor(Math.floor(this.pacman.x), GRIDSIZE) / GRIDSIZE;
+    this.marker.y = Phaser.Math.Snap.Floor(Math.floor(this.pacman.y), GRIDSIZE) / GRIDSIZE;
     this.directions[Direction.LEFT] = this.map.getTileAt(this.marker.x - 1, this.marker.y);
     this.directions[Direction.RIGHT] = this.map.getTileAt(this.marker.x + 1, this.marker.y);
     this.directions[Direction.UP] = this.map.getTileAt(this.marker.x, this.marker.y - 1);
@@ -117,7 +121,7 @@ export default class Pacman extends Phaser.Scene {
   }
 
   private checkDirection(turnTo: any) {
-    if (this.turning === turnTo || this.directions[turnTo] === null || this.directions[turnTo].index !== this.safetile) {
+    if (this.turning === turnTo || this.directions[turnTo] === null || this.directions[turnTo].index !== SAFETILE) {
       //  Invalid direction if they're already set to turn that way
       //  Or there is no tile there, or the tile isn't index 1 (a floor tile)
       return;
@@ -127,8 +131,8 @@ export default class Pacman extends Phaser.Scene {
       this.move(turnTo);
     } else {
       this.turning = turnTo;
-      this.turnPoint.x = (this.marker.x * this.gridsize) + (this.gridsize / 2);
-      this.turnPoint.y = (this.marker.y * this.gridsize) + (this.gridsize / 2);
+      this.turnPoint.x = (this.marker.x * GRIDSIZE) + (GRIDSIZE / 2);
+      this.turnPoint.y = (this.marker.y * GRIDSIZE) + (GRIDSIZE / 2);
     }
   }
 
@@ -136,7 +140,7 @@ export default class Pacman extends Phaser.Scene {
     const cx = Math.floor(this.pacman.x);
     const cy = Math.floor(this.pacman.y);
     //  This needs a threshold, because at high speeds you can't turn because the coordinates skip past
-    if (!Phaser.Math.Fuzzy.Equal(cx, this.turnPoint.x, this.threshold) || !Phaser.Math.Fuzzy.Equal(cy, this.turnPoint.y, this.threshold)) {
+    if (!Phaser.Math.Fuzzy.Equal(cx, this.turnPoint.x, THRESHOLD) || !Phaser.Math.Fuzzy.Equal(cy, this.turnPoint.y, THRESHOLD)) {
       return false;
     }
     //  Grid align before turning
@@ -149,7 +153,7 @@ export default class Pacman extends Phaser.Scene {
   }
 
   private move(direction: any) {
-    let speed = this.speed;
+    let speed = SPEED;
     if (direction === Direction.LEFT || direction === Direction.UP) {
       speed = -speed;
     }
