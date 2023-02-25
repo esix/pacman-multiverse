@@ -9,9 +9,11 @@ enum Direction {
 }
 
 const SAFETILE = 14;
-const GRIDSIZE = 16;
+const GRIDSIZE = 40;
 const SPEED = 150;
 const THRESHOLD = 3;
+
+
 
 export default class Pacman extends Phaser.Scene {
   private map: Phaser.Tilemaps.Tilemap;
@@ -66,23 +68,23 @@ export default class Pacman extends Phaser.Scene {
     const tileset = this.map.addTilesetImage('pacman-tiles', 'tiles');
 
     this.layer = this.map.createLayer('Pacman', tileset, 0, 0);
-    this.layer.scaleX = 1.6;
-    this.layer.scaleY = 1;
+    // this.layer.scaleX = 1.8;
+    // this.layer.scaleY = 1.2;
 
     this.dots = this.add.group();
     const pillsArray = this.map.createFromTiles(7, SAFETILE, {key: 'dot'}, this);
     pillsArray.forEach(dot => {
-      dot.x += 6;
-      dot.y += 6;
+      dot.x += 20;
+      dot.y += 20;
       this.physics.add.existing(dot)
       this.dots.add(dot);
     });
     //  Pacman should collide with everything except the safe tile
     this.map.setCollisionByExclusion([SAFETILE], true, false, this.layer);
 
-    //  Position Pacman at grid location 14x17 (the +8 accounts for his anchor)
-    this.pacman = this.physics.add.sprite((14 * 16) + 8, (17 * 16) + 8, 'pacman', 0);
-    this.pacman.body.setSize(16, 16);
+    //  Position Pacman
+    this.pacman = this.physics.add.sprite(9.5 * GRIDSIZE, 7.5 * GRIDSIZE, 'pacman', 0);
+    this.pacman.body.setSize(GRIDSIZE, GRIDSIZE);
 
     this.pacman.play('munch');
     this.physics.add.collider(this.pacman, this.layer);
