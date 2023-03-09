@@ -1,5 +1,6 @@
 import Preloader from "./Preloader";
 import Pacman from "./Pacman";
+import Digger from "./Digger";
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
   title: 'Ultra Pacman',
@@ -21,5 +22,5 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
     }
   },
   // scene: [Preloader, Pacman]
-  scene: [Pacman]
+  scene: [Pacman, Digger, Preloader]
 };

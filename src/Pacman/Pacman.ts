@@ -105,6 +105,11 @@ export default class Pacman extends Phaser.Scene {
 
     this.checkKeys();
     if (this.turning !== Direction.NONE) this.turn();
+
+
+    if (this.pacman.x > this.scale.getViewPort().width) {
+      this.scene.start('Digger', {x: 0, y: this.pacman.y});
+    }
   }
 
   private checkKeys() {
