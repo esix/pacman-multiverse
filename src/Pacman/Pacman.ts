@@ -11,8 +11,15 @@ enum Direction {
 const SAFETILE = 14;
 const GRIDSIZE = 40;
 const SPEED = 150;
-const THRESHOLD = 3;
+const THRESHOLD = 10;
 
+// const INITIAL_X = 9.5;
+// const INITIAL_Y = 7.5;
+// const INITIAL_DIRECTION = Direction.LEFT;
+
+const INITIAL_X = 14.5;
+const INITIAL_Y = 5.5;
+const INITIAL_DIRECTION = Direction.RIGHT;
 
 
 export default class Pacman extends Phaser.Scene {
@@ -46,7 +53,7 @@ export default class Pacman extends Phaser.Scene {
     this.load.image('dot', require('./assets/dot.png'));
     this.load.image('tiles', require('./assets/pacman-tiles.png'));
     this.load.tilemapTiledJSON('map', require('./assets/pacman-map.json'));
-    this.load.spritesheet('pacman', require('./assets/pacman.png'), {frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('pacman', require('../assets/pacman.png'), {frameWidth: 40, frameHeight: 40});
 
     // this.load.scenePlugin({
     //   key: 'ArcadePhysics',
@@ -56,6 +63,7 @@ export default class Pacman extends Phaser.Scene {
   }
 
   public create(): void {
+
     this.anims.create({
       key: 'munch',
       frames: this.anims.generateFrameNumbers('pacman', {frames: [0, 1, 2, 1]}),
@@ -64,12 +72,12 @@ export default class Pacman extends Phaser.Scene {
     });
 
     this.map = this.make.tilemap({key: 'map'});
-
     const tileset = this.map.addTilesetImage('pacman-tiles', 'tiles');
 
-    this.layer = this.map.createLayer('Pacman', tileset, 0, 0);
-    // this.layer.scaleX = 1.8;
-    // this.layer.scaleY = 1.2;
+    const gameHeight = this.scale.getViewPort().height;
+    const mapTop = (gameHeight - this.map.heightInPixels) >> 1;
+
+    this.layer = this.map.createLayer('Pacman', tileset, 0, mapTop);
 
     this.dots = this.add.group();
     const pillsArray = this.map.createFromTiles(7, SAFETILE, {key: 'dot'}, this);
@@ -83,7 +91,10 @@ export default class Pacman extends Phaser.Scene {
     this.map.setCollisionByExclusion([SAFETILE], true, false, this.layer);
 
     //  Position Pacman
-    this.pacman = this.physics.add.sprite(9.5 * GRIDSIZE, 7.5 * GRIDSIZE, 'pacman', 0);
+    this.pacman = this.physics.add.sprite(
+      INITIAL_X * GRIDSIZE,
+      INITIAL_Y * GRIDSIZE + mapTop,
+      'pacman', 0);
     this.pacman.body.setSize(GRIDSIZE, GRIDSIZE);
 
     this.pacman.play('munch');
@@ -92,7 +103,7 @@ export default class Pacman extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.move(Direction.LEFT)
+    this.move(INITIAL_DIRECTION);
   }
 
   public update(time: number, delta: number) {
@@ -105,7 +116,6 @@ export default class Pacman extends Phaser.Scene {
 
     this.checkKeys();
     if (this.turning !== Direction.NONE) this.turn();
-
 
     if (this.pacman.x > this.scale.getViewPort().width) {
       this.scene.start('Digger', {x: 0, y: this.pacman.y});
@@ -160,28 +170,26 @@ export default class Pacman extends Phaser.Scene {
   }
 
   private move(direction: any) {
-    let speed = SPEED;
-    if (direction === Direction.LEFT || direction === Direction.UP) {
-      speed = -speed;
-    }
-    if (direction === Direction.LEFT || direction === Direction.RIGHT) {
-      this.pacman.body.setVelocityX(speed);
-    } else {
-      this.pacman.body.setVelocityY(speed);
-    }
-    // rotate sprite in right direction
     switch (direction) {
       case Direction.UP:
         this.pacman.angle = -90;
+        this.pacman.body.setVelocityX(0);
+        this.pacman.body.setVelocityY(-SPEED);
         break;
       case Direction.DOWN:
         this.pacman.angle = 90;
+        this.pacman.body.setVelocityX(0);
+        this.pacman.body.setVelocityY(+SPEED);
         break;
       case Direction.RIGHT:
         this.pacman.angle = 0;
+        this.pacman.body.setVelocityX(+SPEED);
+        this.pacman.body.setVelocityY(0);
         break;
       case Direction.LEFT:
         this.pacman.angle = 180;
+        this.pacman.body.setVelocityX(-SPEED);
+        this.pacman.body.setVelocityY(0);
         break;
     }
     this.current = direction;

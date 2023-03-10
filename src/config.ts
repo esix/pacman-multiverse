@@ -17,10 +17,10 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: false
+      debug: true,
       // debugShowVelocity: false
     }
   },
-  // scene: [Preloader, Pacman]
-  scene: [Pacman, Digger, Preloader]
+  // scene: [Preloader, Pacman, Digger]
+  scene: [Pacman, Digger],
 };
