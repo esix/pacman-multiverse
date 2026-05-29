@@ -1,7 +1,5 @@
-import 'Phaser';
+import Phaser from 'phaser';
 import { GameConfig } from './config';
-import './index.html';
-
 
 export class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {
@@ -10,5 +8,5 @@ export class Game extends Phaser.Game {
 }
 
 window.addEventListener('load', () => {
-  const game = new Game(GameConfig);
+  new Game(GameConfig);
 });

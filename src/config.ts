@@ -1,26 +1,28 @@
-import Preloader from "./Preloader";
-import Pacman from "./Pacman";
-import Digger from "./Digger";
+import Phaser from 'phaser';
+import Boot from './Boot/Boot';
+import Pacman from './Pacman';
+import Digger from './Digger';
+import Dave from './Dave';
+import LodeRunner from './LodeRunner';
+import Bomberman from './Bomberman';
+import SpaceInvaders from './SpaceInvaders';
+import Persia from './Persia';
+import HUD from './HUD';
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
-  title: 'Ultra Pacman',
-  url: 'https://github.com/esix/ultra-pacman',
-  version: '1.0',
+  title: 'Pacman Multiverse',
+  version: '0.1',
   width: 800,
   height: 600,
-  // backgroundColor: "#EDEEC9",
   backgroundColor: 0x000000,
-  // resolution: 1,
   type: Phaser.AUTO,
   parent: 'game',
   pixelArt: true,
   physics: {
-    default: "arcade",
+    default: 'arcade',
     arcade: {
       debug: true,
-      // debugShowVelocity: false
-    }
+    },
   },
-  // scene: [Preloader, Pacman, Digger]
-  scene: [Pacman, Digger],
+  scene: [Boot, Pacman, Digger, Dave, LodeRunner, Bomberman, SpaceInvaders, Persia, HUD],
 };

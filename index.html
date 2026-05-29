@@ -2,38 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pacman</title>
+  <title>Pacman Multiverse</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <meta name="author" content="esix" />
   <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta http-equiv="cleartype" content="on">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="stylesheet"
-        type="text/css"
-        href="assets/styles/style.css"
-        media="screen" />
   <style>
     html, body {
       margin: 0;
       padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: monospace;
     }
     h1 {
       text-align: center;
+      margin: 12px 0;
     }
     .game-container {
       display: flex;
       justify-content: center;
     }
-    #game {
-
-    }
   </style>
 </head>
 <body>
-  <h1>Pacman</h1>
+  <h1>Pacman Multiverse</h1>
   <section class="game-container">
     <div id="game"></div>
   </section>
+  <script type="module" src="/src/game.ts"></script>
 </body>
 </html>
